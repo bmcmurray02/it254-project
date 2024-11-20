@@ -1,0 +1,35 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(8, 6, 5, 4, 3, 2);
+
+const int sensorPin = A0; // Analog pin for the sensor
+int sensorValue = 0; // Starting value for the sensor
+int numValue = 0; // Starting value for the moisture
+const int buzzerPin = 7; // Pin connected to the buzzer
+
+void setup() {
+  lcd.begin(16, 2);
+}
+
+void loop() {
+
+  sensorValue = analogRead(sensorPin);
+  
+  //LCS Display code
+  numValue = map(sensorValue, 0, 200, 0, 255);
+  lcd.setCursor(0, 0);
+  lcd.print("Soil Moisture"); // Label for the LCD reading
+  lcd.setCursor(0, 1);  
+  lcd.print("Value: ");
+  lcd.print(numValue);
+  delay(1000);
+  lcd.clear();
+
+  // Buzzer code
+  if (sensorValue < 200) { 
+    tone(buzzerPin, 1000); // Play a tone on the buzzer if moisture is below desired level
+  } else { 
+    noTone(buzzerPin); // Stop the tone if moisture is above the desired level
+  }
+  
+  delay(100); 
+}
